@@ -154,7 +154,7 @@ def draw_skeleton(joints_list,show=0,save=0,autoscale=0,outdir="",outname="",sca
 
       ax.plot([joints[f][0],joints[t][0]],[joints[f][1],joints[t][1]],[joints[f][2],joints[t][2]])
     ax.plot([joints[8][0],joints[4][0]],[joints[8][1],joints[4][1]],[joints[8][2],joints[4][2]],color='black')
-    ax.text(0.75,0.75,'scale='+str(scale),fontsize=7)
+    #ax.text(0.75, 0.75, s='scale='+str(scale), fontsize=7)
 
     if autoscale:
       ax.set_xlabel('X Label')
@@ -181,7 +181,7 @@ def draw_skeleton(joints_list,show=0,save=0,autoscale=0,outdir="",outname="",sca
 
 
 def normalize_skeleton(jinfo,anchor=None,norm_dist=0,right_to_left=None,spine_to_top=None):
-  if anchor == None and norm_dist == 0:
+  if np.any(anchor == None) and norm_dist == 0:
     anchor = np.array([jinfo[1][0],jinfo[1][1],jinfo[1][2]])
     base = np.array([jinfo[0][0],jinfo[0][1],jinfo[0][2]])
     norm_dist = np.linalg.norm(anchor-base) 
@@ -253,7 +253,7 @@ def normalize_skeleton(jinfo,anchor=None,norm_dist=0,right_to_left=None,spine_to
 
 
 def vids_with_missing_skeletons():
-  f = open('/home-2/jhou16@jhu.edu/data/nturgbd/samples_with_missing_skeletons.txt','r')
+  f = open('/Users/aviad/PycharmProjects/TCNActionRecognition/Data/samples_with_missing_skeletons.txt','r')
   bad_files = []
   for line in f:
     bad_files.append(line.strip()+'.skeleton')
@@ -262,9 +262,9 @@ def vids_with_missing_skeletons():
 
 def generate_data(argv):
   bad_files = vids_with_missing_skeletons()
-  skeleton_dir_root = "/home-2/jhou16@jhu.edu/data/nturgbd/nturgb+d_skeletons"
+  skeleton_dir_root = "/Users/aviad/PycharmProjects/TCNActionRecognition/Data/nturgb+d_skeletons/"
   skeleton_files = os.listdir(skeleton_dir_root)
-  data_out_dir = '/home-2/jhou16@jhu.edu/data/nturgbd/subjects_split_raw/'
+  data_out_dir = '/Users/aviad/PycharmProjects/TCNActionRecognition/Data/nturgbd/subjects_split_raw/'
 
   #sk_info = {} # key: file_name, value: corresponding vid_info dict
 

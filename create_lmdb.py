@@ -14,9 +14,9 @@ num_train_chunks = 18
 num_test_chunks = 13
 
 for m in mode:
-  data_root = '/home/tk/dev/data/nturgbd/subjects_split/'
-  lmdb_file_x = '/home/tk/dev/data/nturgbd/subjects_split/X%s_lmdb'%m
-  lmdb_file_y = '/home/tk/dev/data/nturgbd/subjects_split/Y%s_lmdb'%m
+  data_root = '/Users/aviad/PycharmProjects/TCNActionRecognition/Data/nturgbd/subjects_split/'
+  lmdb_file_x = '/Users/aviad/PycharmProjects/TCNActionRecognition/Data/nturgbd/subjects_split/X%s_lmdb'%m
+  lmdb_file_y = '/Users/aviad/PycharmProjects/TCNActionRecognition/Data/nturgbd/subjects_split/Y%s_lmdb'%m
 
 
   max_len = 300
@@ -38,7 +38,7 @@ for m in mode:
 
   for c in range(0,count):
     loaded = dd.io.load(data_root+'Xy_%s_%03d'%(m,c)+'.h5')
-    print 'loaded %sing'%m, c
+    print ('loaded %sing'%m, c)
 
     #data = (loaded['X_train'],loaded['y_train'])
     X = loaded['X_%s'%m]
@@ -64,7 +64,7 @@ for m in mode:
   if (item_id+1) % batch_size != 0:
     lmdb_txn_x.commit()
     lmdb_txn_y.commit()
-    print 'last batch'
+    print('last batch')
     print (item_id + 1)
 
 

@@ -1,6 +1,5 @@
 import numpy as np
 import sys
-sys.path.append('/home-2/jhou16@jhu.edu/.local/lib/python3.6/site-packages')
 
 from keras.models import Sequential, Model
 from keras.layers import Input, Dense, TimeDistributed, Lambda
@@ -26,7 +25,7 @@ def TCN_simple(
            kernel_regularizer=l2(1.e-4),
            activation="relu"):
   
-  if K.image_dim_ordering() == 'tf':
+  if K.image_data_format() == 'tf':
     ROW_AXIS = 1
     CHANNEL_AXIS = 2
   else:
@@ -76,7 +75,7 @@ def TCN_plain(
            kernel_regularizer=l2(1.e-4),
            activation="relu"):
   
-  if K.image_dim_ordering() == 'tf':
+  if K.image_data_format() == 'channels_last':
     ROW_AXIS = 1
     CHANNEL_AXIS = 2
   else:
@@ -127,7 +126,7 @@ def TCN_resnet(
            kernel_regularizer=l1(1.e-4),
            activation="relu"):
   
-  if K.image_dim_ordering() == 'tf':
+  if K.image_data_format() == 'channels_last':
     ROW_AXIS = 1
     CHANNEL_AXIS = 2
   else:
@@ -210,7 +209,7 @@ def TCN_simple_resnet(
            kernel_regularizer=l1(1.e-4),
            activation="relu"):
   
-  if K.image_dim_ordering() == 'tf':
+  if K.image_data_format() == 'channels_last':
     ROW_AXIS = 1
     CHANNEL_AXIS = 2
   else:

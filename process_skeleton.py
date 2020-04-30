@@ -4,7 +4,7 @@ import numpy as np
 import pdb
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
-import cv2
+# import cv2
 import math
 import lmdb
 from keras.utils import np_utils
@@ -258,7 +258,8 @@ def vids_with_missing_skeletons():
 
 def generate_data(argv):
   bad_files = vids_with_missing_skeletons()
-  skeleton_dir_root = "/home/tk/dev/data/nturgbd/nturgb+d_skeletons"
+  skeleton_dir_root = "/Users/aviad/PycharmProjects/TCNActionRecognition/Data/nturgb+d_skeletons/"
+
   skeleton_files = os.listdir(skeleton_dir_root)
   data_out_dir = '/media/tk/EE44DA8044DA4B4B/subjects_split_rot_norm_quat/'
 
@@ -374,16 +375,16 @@ def generate_data(argv):
     sf.close()
     count += 1
     if count % 100 == 0:
-      print count,"/",num_files
+      print(count,"/",num_files)
   ## END FILE LOOP
 
 
-  print "Writing out data . . . "
+  print( "Writing out data . . . ")
   
   train_max_len = max([len(c) for c  in X_train])
   test_max_len = max([len(c) for c  in X_test])
   max_len = max(train_max_len,test_max_len)
-  print max_len
+  print (max_len)
   step_size = 2000
   
 
@@ -424,7 +425,7 @@ def generate_data(argv):
   if (item_id+1) % batch_size != 0:
     lmdb_txn_x.commit()
     lmdb_txn_y.commit()
-    print 'last batch'
+    print ('last batch')
     print (item_id + 1)
 
   print "WROTE TRAINING"

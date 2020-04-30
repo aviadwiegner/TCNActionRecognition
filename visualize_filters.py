@@ -16,7 +16,7 @@ n_classes = 60
 feat_dim = 150
 max_len = 300
 
-weights = '/home/tk/dev/tksrc/icu/weights/tk_tcn_xyz_d50_c25_128x2_256x2_512x2/105_0.592.hdf5'
+weights = '/Users/aviad/PycharmProjects/TCNActionRecognition/weights/cross_subject.hdf5'
 
 def to_joint_dict(feature):
   # assumes 150-D feature,
@@ -42,7 +42,7 @@ def to_joint_dict(feature):
 def extract_feature_from_file_index(indx):
   feat_dim = 150
   bad_files = vids_with_missing_skeletons()
-  skeleton_dir_root = "/home/tk/dev/data/nturgbd/nturgb+d_skeletons"
+  skeleton_dir_root = "/Users/aviad/PycharmProjects/TCNActionRecognition/Data/nturgbd/nturgb+d_skeletons"
   skeleton_files = os.listdir(skeleton_dir_root)
   file_name = skeleton_files[indx]
 
@@ -196,8 +196,8 @@ def vis_skeleton_movement():
   X = X.reshape((1,X.shape[0],X.shape[1]))
   prediction = np.argmax(model.predict(X))
 
-  print "Ground Truth: ", y,"(%s)"%y_name
-  print "Prediction: ", prediction,"(%s)"%classes[prediction]
+  print("Ground Truth: ", y,"(%s)"%y_name)
+  print("Prediction: ", prediction,"(%s)"%classes[prediction])
 
   conv1_filters = model.layers[1].get_weights()[0][:,0]
   conv1_activation = get_activations(model,layer_ind, X)[0]
@@ -237,8 +237,8 @@ def activate_joint_by_filter():
   X = X.reshape((1,X.shape[0],X.shape[1]))
   prediction = np.argmax(model.predict(X))
 
-  print "Ground Truth: ", y,"(%s)"%y_name
-  print "Prediction: ", prediction,"(%s)"%classes[prediction]
+  print("Ground Truth: ", y,"(%s)"%y_name)
+  print("Prediction: ", prediction,"(%s)"%classes[prediction])
 
   conv1_filters = model.layers[1].get_weights()[0][:,0]
   conv1_activation = get_activations(model,layer_ind, X)[0]
