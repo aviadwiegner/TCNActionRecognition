@@ -280,106 +280,108 @@ def generate_data(argv):
   for file_name in skeleton_files:
     if file_name in bad_files:
       continue
-    action_class = int(file_name[file_name.find('A')+1:file_name.find('A')+4])
-    subject_id = int(file_name[file_name.find('P')+1:file_name.find('P')+4])
 
-    sf = open(os.path.join(skeleton_dir_root,file_name),'r')
-    num_frames = int(sf.readline())
-    #vid_info = dict() ## key=frame_num,  value=body info dicts
-  
-    feature = np.zeros((num_frames, feat_dim))
-    for n in range(0,num_frames):
-      body_count = int(sf.readline())
-      #print body_count
+    if file_name[0] == 'S':
+      action_class = int(file_name[file_name.find('A')+1:file_name.find('A')+4])
+      subject_id = int(file_name[file_name.find('P')+1:file_name.find('P')+4])
 
-      if body_count > 2:
-        # JUST ITERATE THROUGH THE LINES, IGNORE 
-        for b in range(0,body_count):
-          body_info = sf.readline()
-          joint_count = int(sf.readline())
-          for j in range(0,joint_count):
-            joint_info = sf.readline()
-      else:
-        
-        binfo = dict()
-        norm_dist = 0
-        anchor = None
-        right_to_left = None
-        spine_to_top = None
-        for b in range(0,body_count):
-          body_info = sf.readline()
-          bsp = body_info.split()
-          
-          body_id = bsp[0]
-          cliped_edges = bsp[1]
-          lefthand_confidence = bsp[2]
-          lefthand_state = bsp[3]
-          righthand_confidence = bsp[4]
-          righthand_state = bsp[5]
-          is_restricted = bsp[6]
-          lean_x = bsp[7]
-          lean_y = bsp[8]
-          body_tracking_state = bsp[9]
+      sf = open(os.path.join(skeleton_dir_root,file_name),'r')
+      num_frames = int(sf.readline())
+      #vid_info = dict() ## key=frame_num,  value=body info dicts
 
-          #binfo[b] = bsp
-          joint_count = int(sf.readline()) ## ASSUMING THIS IS ALWAYS 25
+      feature = np.zeros((num_frames, feat_dim))
+      for n in range(0,num_frames):
+        body_count = int(sf.readline())
+        #print body_count
+
+        if body_count > 2:
+          # JUST ITERATE THROUGH THE LINES, IGNORE
+          for b in range(0,body_count):
+            body_info = sf.readline()
+            joint_count = int(sf.readline())
+            for j in range(0,joint_count):
+              joint_info = sf.readline()
+        else:
+
+          binfo = dict()
+          norm_dist = 0
+          anchor = None
+          right_to_left = None
+          spine_to_top = None
+          for b in range(0,body_count):
+            body_info = sf.readline()
+            bsp = body_info.split()
+
+            body_id = bsp[0]
+            cliped_edges = bsp[1]
+            lefthand_confidence = bsp[2]
+            lefthand_state = bsp[3]
+            righthand_confidence = bsp[4]
+            righthand_state = bsp[5]
+            is_restricted = bsp[6]
+            lean_x = bsp[7]
+            lean_y = bsp[8]
+            body_tracking_state = bsp[9]
+
+            #binfo[b] = bsp
+            joint_count = int(sf.readline()) ## ASSUMING THIS IS ALWAYS 25
 
 
-          jinfo = dict()
-          
-          for j in range(0,joint_count):
-            joint_info = sf.readline()
-            jsp = joint_info.split()
-            x = float(jsp[0])
-            y = float(jsp[1])
-            z = float(jsp[2])
-            depth_x = float(jsp[3])
-            depth_y = float(jsp[4])
-            rgb_x = float(jsp[5])
-            rgb_y = float(jsp[6])
-            rw = float(jsp[7])
-            rx = float(jsp[8])
-            ry = float(jsp[9])
-            rz = float(jsp[10])
-            joint_tracking_state = jsp[11]
+            jinfo = dict()
 
-            jinfo[j] = (x,y,z,rw,rx,ry,rz)
-          ## END JOINT LOOP
-          
-          
-          #norm_jinfo,anchor,norm_dist,right_to_left,spine_to_top = normalize_skeleton(jinfo,anchor=anchor,norm_dist=norm_dist,right_to_left=right_to_left,spine_to_top=spine_to_top)
-          
-          binfo[b] = jinfo
-      
-        ## END BODY LOOP
-        sample_ind = 0
-        sample = np.zeros(feat_dim)
-        
-        ## CONSTRUCT THE FEATURE FOR THIS N-th FRAME
-        for bind, body in binfo.items():
-          for jind, joint in body.items():
-            sample[sample_ind] =   joint[0] #x
-            sample_ind += 1
-            sample[sample_ind] =   joint[1] #y
-            sample_ind += 1
-            sample[sample_ind] =   joint[2] #z
-            sample_ind += 1
-        feature[n] = sample
-      ## END BODY COUNT IF-ELSE
-    ## END FRAME LOOP
+            for j in range(0,joint_count):
+              joint_info = sf.readline()
+              jsp = joint_info.split()
+              x = float(jsp[0])
+              y = float(jsp[1])
+              z = float(jsp[2])
+              depth_x = float(jsp[3])
+              depth_y = float(jsp[4])
+              rgb_x = float(jsp[5])
+              rgb_y = float(jsp[6])
+              rw = float(jsp[7])
+              rx = float(jsp[8])
+              ry = float(jsp[9])
+              rz = float(jsp[10])
+              joint_tracking_state = jsp[11]
 
-    if body_count <= 2:
-      if subject_id in training_subjects:
-        X_train.append(feature)
-        y_train.append(action_class-1)
-      else:
-        X_test.append(feature)
-        y_test.append(action_class-1)
-    sf.close()
-    count += 1
-    if count % 100 == 0:
-      print(count,"/",num_files)
-  ## END FILE LOOP
+              jinfo[j] = (x,y,z,rw,rx,ry,rz)
+            ## END JOINT LOOP
+
+
+            #norm_jinfo,anchor,norm_dist,right_to_left,spine_to_top = normalize_skeleton(jinfo,anchor=anchor,norm_dist=norm_dist,right_to_left=right_to_left,spine_to_top=spine_to_top)
+
+            binfo[b] = jinfo
+
+          ## END BODY LOOP
+          sample_ind = 0
+          sample = np.zeros(feat_dim)
+
+          ## CONSTRUCT THE FEATURE FOR THIS N-th FRAME
+          for bind, body in binfo.items():
+            for jind, joint in body.items():
+              sample[sample_ind] =   joint[0] #x
+              sample_ind += 1
+              sample[sample_ind] =   joint[1] #y
+              sample_ind += 1
+              sample[sample_ind] =   joint[2] #z
+              sample_ind += 1
+          feature[n] = sample
+        ## END BODY COUNT IF-ELSE
+      ## END FRAME LOOP
+
+      if body_count <= 2:
+        if subject_id in training_subjects:
+          X_train.append(feature)
+          y_train.append(action_class-1)
+        else:
+          X_test.append(feature)
+          y_test.append(action_class-1)
+      sf.close()
+      count += 1
+      if count % 100 == 0:
+        print(count,"/",num_files)
+    ## END FILE LOOP
 
 
   print("Writing out data . . . ")

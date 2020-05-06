@@ -11,7 +11,7 @@ import Models
 from keras.utils import np_utils
 from keras.optimizers import RMSprop,SGD,Adam
 from keras.callbacks import ModelCheckpoint
-from keras.regularizers import l2,l1l2,l1
+from keras.regularizers import l2,l1
 import pdb
 import numpy as np
 import lmdb
@@ -145,7 +145,7 @@ def compute_max_len():
     for x in x_tr:
       if len(x) > current_max:
         current_max = len(x)
-    print current_max
+    print(current_max)
   return current_max
 
 
@@ -432,11 +432,11 @@ def compute_dataset_mean():
     total_count += last_time
     total_sum += np.sum(x[:last_time])
 
-    print total_sum
+    print(total_sum)
 
   final_mean = total_sum / total_count
   final_mean = final_mean / feat_dim
-  print final_mean
+  print(final_mean)
   pdb.set_trace()
 
 

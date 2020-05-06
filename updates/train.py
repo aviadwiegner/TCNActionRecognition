@@ -1,7 +1,4 @@
 import sys
-sys.path.append('/cm/shared/apps/python/3.6.0/lib/python3.6/site-packages/lmdb')
-sys.path.append('/cm/shared/apps/python/3.6.0/lib/python3.6/site-packages/keras')
-sys.path.append('/home-2/jhou16@jhu.edu/.local/lib/python3.6/site-packages') 
 import Models
 from keras.utils import np_utils
 from keras.optimizers import RMSprop,SGD,Adam
@@ -25,9 +22,12 @@ raw = 1
 subject_split = 1
 
 ## SET UP THE DATA
+
+# Todo How to split all the relevant data
+
 if subject_split:
   if raw:
-    data_root = '/home-2/jhou16@jhu.edu/data/nturgbd/subjects_split_raw/'
+    data_root = '/Users/aviad/PycharmProjects/TCNActionRecognition/data/nturgbd/subjects_split_raw/'
   else:
     data_root = '/home-2/jhou16@jhu.edu/data/nturgbd/subjects_split_rot_norm_quat/'
 else:
@@ -163,7 +163,7 @@ def nturgbd_train_datagen(augmentation=1):
     
     for index in indices:
       value = np.frombuffer(lmdb_cursor_x.get('{:0>8d}'.format(index).encode()))
-      label = np.frombuffer(lmdb_cursor_y.get('{:0>8d}'.format(index).encode()))
+      label = np.frombuffer(lmdb_cursor_y.get('{:0>8d}'.format(index).encode()), dtype=np.uint8, count=n_classes)
 
       ## THIS IS MEAN SUBTRACTION
       x = value.reshape((max_len,feat_dim))
@@ -177,7 +177,7 @@ def nturgbd_train_datagen(augmentation=1):
       x[:last_time] = x[:last_time] - train_x_mean
 
       ## ORIGINAL
-      X[batch_count] =  x.reshape(max_len,feat_dim,1)
+      X[batch_count] =  x.reshape(max_len,feat_dim)
       Y[batch_count] = label
       batch_count += 1
 
@@ -259,7 +259,7 @@ def nturgbd_test_datagen():
     batch_count = 0
     for index in indices:
       value = np.frombuffer(lmdb_cursor_x.get('{:0>8d}'.format(index).encode()))
-      label = np.frombuffer(lmdb_cursor_y.get('{:0>8d}'.format(index).encode()))
+      label = np.frombuffer(lmdb_cursor_y.get('{:0>8d}'.format(index).encode()), dtype=np.uint8, count=n_classes)
       
       ## THIS IS MEAN SUBTRACTION
       x = value.reshape((max_len,feat_dim))
