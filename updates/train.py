@@ -68,7 +68,7 @@ verbose = 1
 shuffle = 1
 
 if subject_split:
-  samples_per_epoch = 39889
+  samples_per_epoch = 1000 #39889
   samples_per_validation = 16390
   if raw:
     train_x_mean = 0.590914884877
@@ -333,9 +333,9 @@ def train():
 
   if not os.path.exists('weights/'+out_dir_name):
     os.makedirs('weights/'+out_dir_name) 
-  weight_path = 'weights/'+out_dir_name+'/{epoch:03d}_{val_acc:0.3f}.hdf5'
+  weight_path = 'weights/'+out_dir_name+'/{epoch:03d}_{val_accuracy:0.3f}.hdf5'
   checkpoint = ModelCheckpoint(weight_path, 
-                               monitor='val_acc', 
+                               monitor='val_accuracy',
                                verbose=1, 
                                save_best_only=True, mode='max')
   reduce_lr = ReduceLROnPlateau(monitor='val_loss', 
